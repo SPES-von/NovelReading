@@ -1,0 +1,45 @@
+@startuml 图4-5-加入书架活动图
+!theme plain
+skinparam backgroundColor #FEFEFE
+
+title 图4-5 加入书架业务流程活动图
+
+|用户|
+start
+:在小说详情页点击“加入书架”;
+
+if (已登录?) then (否)
+  :跳转登录页;
+  stop
+endif
+
+|前端|
+:携带 JWT 请求 POST /novels/{id}/favorite;
+
+|后端|
+:解析 JWT 获取当前用户;
+:查询 user_bookshelf (user_id, novel_id);
+
+if (已存在?) then (是)
+  |前端|
+  :返回“已在书架”;
+  |用户|
+  :提示已收藏;
+  stop
+endif
+
+|后端|
+:插入 user_bookshelf;
+:novel.favorite_count += 1;
+:返回成功;
+
+|前端|
+:更新详情页收藏状态与数量;
+:可选：刷新书架列表;
+
+|用户|
+:提示加入成功;
+
+stop
+
+@enduml

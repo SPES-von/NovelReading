@@ -1,0 +1,70 @@
+# ============================================
+# 轻小说阅读系统 - 应用配置文件
+# 包含 MySQL、Redis、JWT、百度语音 API 等配置
+# ============================================
+
+spring:
+  application:
+    name: novel-reading-system
+
+  # ===== MySQL 数据库配置 =====
+  # 存储小说信息、用户数据等核心业务数据
+  datasource:
+    url: jdbc:mysql://localhost:3306/novel_reading?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&createDatabaseIfNotExist=true
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+
+  # ===== JPA 配置 =====
+  jpa:
+    hibernate:
+      ddl-auto: update  # 开发环境自动更新表结构，生产环境建议改为 validate
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+    open-in-view: false
+
+  # ===== Redis 缓存配置 =====
+  # 缓存热门小说数据、用户阅读进度，提升系统响应速度
+  data:
+    redis:
+      host: localhost
+      port: 6380
+      password:
+      database: 0
+      timeout: 5000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+
+# ===== 服务器配置 =====
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+# ===== JWT 配置 =====
+# 用于用户身份验证和 API 访问控制
+jwt:
+  secret: novel-reading-jwt-secret-key-for-production-change-in-production-env
+  expiration: 86400000  # 24小时，毫秒
+  header: Authorization
+  prefix: Bearer 
+
+# ===== 百度语音合成 API 配置 =====
+# 实现小说朗读/听书功能
+baidu:
+  speech:
+    app-id: ${BAIDU_SPEECH_APP_ID:your_app_id}
+    api-key: ${BAIDU_SPEECH_API_KEY:your_api_key}
+    secret-key: ${BAIDU_SPEECH_SECRET_KEY:your_secret_key}
+
+# ===== 跨域配置（由 WebMvcConfig 处理） =====
+# 支持 Vue.js 前端跨域访问 RESTful API

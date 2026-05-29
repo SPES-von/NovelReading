@@ -1,0 +1,31 @@
+@startuml 图4-2-功能模块图
+!theme plain
+skinparam backgroundColor #FEFEFE
+
+title 图4-2 系统功能模块图
+
+rectangle "轻小说阅读系统" {
+  package "读者端功能模块" {
+    [首页与推荐模块] as M1
+    [小说展示与互动模块] as M2
+    [章节与阅读模块] as M3
+    [用户与认证模块] as M4
+    [个人中心模块] as M5
+    [听书模块] as M6
+  }
+  package "管理端功能模块" {
+    [用户管理模块] as A1
+    [小说管理模块] as A2
+    [分类管理模块] as A3
+    [评论管理模块] as A4
+    [数据统计模块] as A5
+    [系统设置模块] as A6
+  }
+}
+
+M1 -[#gray]-> M2 : 推荐入口
+M2 -[#gray]-> M3 : 进入阅读
+M4 -[#gray]-> M5 : 登录后
+M3 -[#gray]-> M6 : 听书入口
+
+@enduml

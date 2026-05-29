@@ -1,0 +1,44 @@
+@startuml 图5-1-系统部署结构图
+!theme plain
+skinparam backgroundColor #FEFEFE
+
+title 图5-1 系统部署结构图
+
+node "用户端" as Client {
+  [浏览器\nPC / 移动端] as Browser
+}
+
+cloud "可选 CDN" as CDN {
+  note right
+    静态资源加速
+    (HTML/CSS/JS/图片)
+  end note
+}
+
+node "服务器（Linux / 云主机）" as Server {
+
+  component "Nginx\n(反向代理与静态资源)" as Nginx {
+    [/: 前端静态\n/api: 反向代理到后端] as NginxConf
+  }
+
+  node "前端部署" as FE {
+    [Vue 3 构建产物\n(dist: index.html + 静态资源)] as VueDist
+  }
+
+  node "后端部署" as BE {
+    [Spring Boot\nJAR 内嵌 Tomcat\n端口 8080] as SpringBoot
+  }
+
+  database "MySQL 8\nnovel_reading" as MySQL
+  database "Redis 6\n缓存" as Redis
+}
+
+Browser --> CDN : HTTPS (可选)
+Browser --> Nginx : HTTPS / HTTP
+CDN --> Nginx : 回源
+Nginx --> VueDist : / 请求静态页
+Nginx --> SpringBoot : /api 反向代理
+SpringBoot --> MySQL : JDBC
+SpringBoot --> Redis : Lettuce
+
+@enduml

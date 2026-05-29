@@ -1,0 +1,71 @@
+@startuml 图4-2-1-访客与用户功能模块图
+!theme plain
+top to bottom direction
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName "Microsoft YaHei UI"
+skinparam packageStyle rectangle
+skinparam ArrowColor #666666
+skinparam packageBorderColor #999999
+
+title 图4-2-1 访客与用户功能模块图
+
+rectangle "前台用户功能（访客 / 注册用户）" as ROOT #E8F4FC
+
+package "访客可用模块" as GUEST #F7FBFF {
+  package "登录/注册" as M1 {
+    [注册]
+    [登录]
+    [退出登录]
+  }
+  package "系统首页" as M2 {
+    [轮播与推荐]
+    [榜单展示]
+    [文库入口]
+  }
+  package "小说信息" as M3 {
+    [小说详情]
+    [搜索与筛选]
+    [排行榜/完本榜]
+    [鲜花/收藏入口]
+  }
+  package "公告与评论" as M4 {
+    [公告展示]
+    [章节评论]
+    [小说评论]
+  }
+  package "阅读与书架（基础）" as M5 {
+    [章节阅读]
+  }
+}
+
+package "登录用户增强模块" as USER #FFFDF5 {
+  package "阅读与书架（登录后）" as U1 {
+    [阅读进度同步]
+    [加入/移出书架]
+    [书架列表管理]
+  }
+  package "个人中心" as U2 {
+    [个人资料维护]
+    [阅读偏好设置]
+    [账号安全]
+  }
+  package "听书" as U3 {
+    [语音合成播放]
+    [播放控制]
+  }
+}
+
+ROOT --> GUEST
+ROOT --> USER
+
+M5 --> U1 : 登录后扩展
+U2 --> U3 : 个性化能力联动
+
+note bottom of ROOT
+访客：首页浏览、小说检索、详情查看、基础阅读
+注册用户：在访客能力基础上新增书架、进度同步、个人中心、听书
+end note
+
+@enduml

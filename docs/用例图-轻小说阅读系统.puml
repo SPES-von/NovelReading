@@ -1,0 +1,77 @@
+@startuml 用例图-轻小说阅读系统
+!theme plain
+skinparam backgroundColor #FEFEFE
+skinparam useCase {
+  BackgroundColor #E8F4FD
+  BorderColor #2E86AB
+}
+skinparam actor {
+  BackgroundColor #FFF
+  BorderColor #333
+}
+
+title 图3-1 轻小说阅读系统用例图
+
+left to right direction
+
+actor "访客" as visitor
+actor "注册用户" as user
+actor "系统管理员" as admin
+
+rectangle "读者端" {
+  (浏览首页) as uc1
+  (浏览小说与分类) as uc2
+  (阅读小说) as uc3
+  (搜索小说) as uc4
+  (查看排行榜) as uc5
+  (送鲜花) as uc6
+  (用户注册) as uc7
+  (用户登录) as uc8
+  (加入书架) as uc9
+  (管理书架) as uc10
+  (个人中心) as uc11
+  (听书) as uc12
+}
+
+rectangle "管理端" {
+  (用户管理) as uc13
+  (小说管理) as uc14
+  (分类管理) as uc15
+  (评论管理) as uc16
+  (数据统计) as uc17
+  (系统设置) as uc18
+}
+
+' 访客：不含 加入书架、管理书架、个人中心、听书
+visitor --> uc1
+visitor --> uc2
+visitor --> uc3
+visitor --> uc4
+visitor --> uc5
+visitor --> uc6
+visitor --> uc7
+visitor --> uc8
+
+' 注册用户：所有读者端用例
+user --> uc1
+user --> uc2
+user --> uc3
+user --> uc4
+user --> uc5
+user --> uc6
+user --> uc7
+user --> uc8
+user --> uc9
+user --> uc10
+user --> uc11
+user --> uc12
+
+' 系统管理员：仅管理端用例
+admin --> uc13
+admin --> uc14
+admin --> uc15
+admin --> uc16
+admin --> uc17
+admin --> uc18
+
+@enduml

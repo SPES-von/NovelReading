@@ -1,0 +1,62 @@
+@startuml 图4-4-阅读小说时序图
+!theme plain
+title 图4-4 阅读小说关键业务流程时序图（用户阅读小说）
+
+actor 用户 as User
+participant "Vue 前端" as FE
+participant "NovelController" as NC
+participant "ChapterController" as CC
+participant "ChapterService" as CS
+participant "UserController\n/Progress" as UC
+database "MySQL" as DB
+database "Redis" as Redis
+
+note over User,FE
+  小说详情→章节列表→章节正文；
+  已登录用户再保存阅读进度（alt 分支）
+end note
+
+User -> FE: 进入阅读页(novelId, chapterId)
+
+FE -> NC: GET /novels/{novelId}
+NC -> DB: 查询小说基本信息
+DB --> NC: novel
+NC --> FE: 返回小说详情
+
+FE -> CC: GET /chapters/novel/{novelId}
+CC -> CS: 获取章节列表
+CS -> DB: 查询 chapter 表
+DB --> CS: 章节列表
+CS --> CC: 章节列表
+CC --> FE: 返回章节列表
+
+FE -> CC: GET /chapters/{chapterId}
+CC -> CS: 获取章节内容
+CS -> DB: 查询 chapter.content
+DB --> CS: content
+CS --> CC: 章节正文内容
+CC --> FE: 返回章节正文
+
+alt 已登录（携带 Token）
+  User -> FE: 滚动/切换章节
+  FE -> UC: PUT /user/progress（保存阅读进度）
+  UC -> Redis: 写入/更新阅读进度缓存
+  UC -> DB: 更新 reading_progress
+  DB --> UC: success
+  UC --> FE: 保存成功
+else 未登录
+  note over FE: 跳过进度持久化
+end
+
+FE --> User: 展示章节列表与正文
+
+User -> FE: 点击下一章/上一章(nextId)
+FE -> CC: GET /chapters/{nextId}
+CC -> CS: 获取章节内容
+CS -> DB: 查询 chapter.content
+DB --> CS: content
+CS --> CC: 章节正文内容
+CC --> FE: 返回章节正文
+FE --> User: 展示新章节
+
+@enduml

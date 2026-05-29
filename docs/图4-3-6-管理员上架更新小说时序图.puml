@@ -1,0 +1,30 @@
+@startuml 图4-3-6 管理员上架/更新小说时序图
+!theme plain
+title 图4-3-6 管理员上架/更新小说时序图
+
+actor 管理员 as Admin
+participant "Vue 管理端(AdminNovelShelf)" as FE
+participant "AdminNovelController" as ANC
+database "MySQL" as DB
+
+alt 参数校验通过
+  Admin -> FE: 填写信息并点击“上架”
+  FE -> ANC: POST /admin/novels（CreateNovelRequest）
+
+  ANC -> DB: 校验 author/publisher\n保存 novel 记录
+  DB --> ANC: novelId
+
+  ANC -> DB: 计算卷/章节 sort_order\n插入章节（首章/新增章节内容）
+  ANC -> DB: 更新 novel.latestChapterId\n与 latestChapterTitle
+  DB --> ANC: success
+
+  ANC --> FE: 返回 novelId/title
+  FE --> Admin: 前端提示“上架成功”
+else 参数不合法或作者/文库不存在
+  Admin -> FE: 提交上架请求
+  FE -> ANC: POST /admin/novels
+  ANC --> FE: 400 BadRequest（原因说明）
+  FE --> Admin: 展示错误信息
+end
+
+@enduml

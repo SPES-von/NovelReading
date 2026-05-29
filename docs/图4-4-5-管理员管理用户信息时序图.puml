@@ -1,0 +1,36 @@
+@startuml 图4-4-5-管理员管理用户信息时序图
+!theme plain
+title 图4-4-5 管理员管理用户信息时序图
+
+actor 管理员 as Admin
+participant "Vue 管理端" as FE
+participant "AdminUserController" as AUC
+participant "UserService" as US
+database "MySQL" as DB
+
+note over FE,AUC
+  管理端请求携带 Authorization: Bearer <token>
+  后端基于 JWT 校验身份与角色（ADMIN）
+end note
+
+alt 有效管理员权限
+  Admin -> FE: 进入用户管理页/选择筛选条件
+  FE -> AUC: GET /admin/users（分页/关键词/状态）
+  AUC -> US: 查询用户列表
+  US -> DB: SELECT user（user_id/username/status...）
+  DB --> US: 返回用户列表
+  US --> AUC: 返回查询结果
+  AUC --> FE: 渲染用户列表
+
+  Admin -> FE: 点击禁用/启用用户(userId)
+  FE -> AUC: PUT /admin/users/{id}/status
+  AUC -> US: 更新用户状态
+  US -> DB: UPDATE user SET status=...
+  DB --> US: success
+  US --> AUC: 更新结果
+  AUC --> FE: 返回成功
+else Token 无效或非管理员
+  AUC --> FE: 返回 403 Forbidden
+end
+
+@enduml

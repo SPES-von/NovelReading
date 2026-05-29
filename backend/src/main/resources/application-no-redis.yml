@@ -1,0 +1,8 @@
+# 无 Redis 模式：使用内存缓存
+# 启动时添加参数: --spring.profiles.active=no-redis
+# 注意：需要排除 Redis 自动配置，否则会尝试连接 Redis 导致启动失败
+spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration

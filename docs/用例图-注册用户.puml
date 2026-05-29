@@ -1,0 +1,47 @@
+@startuml 用例图-注册用户
+!theme plain
+skinparam backgroundColor #FEFEFE
+skinparam useCase {
+  BackgroundColor #E8F4FD
+  BorderColor #2E86AB
+}
+skinparam actor {
+  BackgroundColor #FFF
+  BorderColor #333
+}
+
+title 用例图 - 注册用户
+
+left to right direction
+
+actor "注册用户" as user
+
+rectangle "读者端" {
+  (浏览首页) as uc1
+  (浏览小说与分类) as uc2
+  (阅读小说) as uc3
+  (搜索小说) as uc4
+  (查看排行榜) as uc5
+  (送鲜花) as uc6
+  (用户注册) as uc7
+  (用户登录) as uc8
+  (加入书架) as uc9
+  (管理书架) as uc10
+  (个人中心) as uc11
+  (听书) as uc12
+}
+
+user --> uc1
+user --> uc2
+user --> uc3
+user --> uc4
+user --> uc5
+user --> uc6
+user --> uc7
+user --> uc8
+user --> uc9
+user --> uc10
+user --> uc11
+user --> uc12
+
+@enduml

@@ -1,0 +1,51 @@
+/**
+ * 轻小说阅读系统 - 全局样式
+ * 参考哔哩轻小说视觉风格
+ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary: #fb7299;
+  --primary-dark: #e85d87;
+  --bg: #f6f7f9;
+  --card-bg: #fff;
+  --text: #333;
+  --text-muted: #999;
+  --border: #eee;
+  --header-height: 56px;
+}
+
+body {
+  font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+input {
+  font-family: inherit;
+}

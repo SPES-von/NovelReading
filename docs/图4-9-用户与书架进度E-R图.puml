@@ -1,0 +1,64 @@
+@startuml 图4-9-用户与书架进度E-R图
+!theme plain
+skinparam backgroundColor #FEFEFE
+
+title 图4-9 用户、书架、阅读进度、阅读偏好 实体 E-R 图
+
+entity "user\n用户" as usr {
+  * id : BIGINT <<PK>>
+  --
+  username : VARCHAR(50) <<UQ>>
+  email : VARCHAR(100) <<UQ>>
+  password : VARCHAR(255)
+  nickname : VARCHAR(50)
+  avatar_url : VARCHAR(500)
+  created_at : DATETIME
+  updated_at : DATETIME
+}
+
+entity "novel\n小说" as nov {
+  * id : BIGINT <<PK>>
+  --
+  title : VARCHAR(255)
+}
+
+entity "reading_progress\n阅读进度" as rp {
+  * id : BIGINT <<PK>>
+  --
+  user_id : BIGINT <<FK>>
+  novel_id : BIGINT <<FK>>
+  volume : VARCHAR(50)
+  sort_order : INT
+  progress_position : INT
+  bookmark : INT
+  last_read_at : DATETIME
+  created_at : DATETIME
+}
+
+entity "user_bookshelf\n用户书架" as ub {
+  * id : BIGINT <<PK>>
+  --
+  user_id : BIGINT <<FK>>
+  novel_id : BIGINT <<FK>>
+  created_at : DATETIME
+}
+
+entity "user_read_preferences\n阅读偏好" as urp {
+  * id : BIGINT <<PK>>
+  --
+  user_id : BIGINT <<FK>> <<UQ>>
+  font_size : INT
+  line_height : DECIMAL(3,1)
+  theme : VARCHAR(20)
+  page_width : INT
+  created_at : DATETIME
+  updated_at : DATETIME
+}
+
+usr ||--o{ rp : "一个用户对多本小说有进度"
+nov ||--o{ rp : "一本小说被多用户阅读"
+usr ||--o{ ub : "一个用户多本收藏"
+nov ||--o{ ub : "一本小说被多用户收藏"
+usr ||--|| urp : "一个用户对应一份偏好(1:1)"
+
+@enduml

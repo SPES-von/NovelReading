@@ -1,0 +1,76 @@
+@startuml 图4-8-小说与章节E-R图
+!theme plain
+skinparam backgroundColor #FEFEFE
+
+title 图4-8 小说、作者、文库、标签、章节 实体 E-R 图
+
+entity "publisher\n文库" as pub {
+  * id : BIGINT <<PK>>
+  --
+  name : VARCHAR(100)
+  sort_order : INT
+  created_at : DATETIME
+  updated_at : DATETIME
+}
+
+entity "author\n作者" as auth {
+  * id : BIGINT <<PK>>
+  --
+  name : VARCHAR(100)
+  created_at : DATETIME
+  updated_at : DATETIME
+}
+
+entity "novel\n小说" as nov {
+  * id : BIGINT <<PK>>
+  --
+  title : VARCHAR(255)
+  author_id : BIGINT <<FK>>
+  publisher_id : BIGINT <<FK>>
+  cover_url : VARCHAR(500)
+  synopsis : TEXT
+  word_count : INT
+  rating : DECIMAL(3,1)
+  is_completed : TINYINT
+  is_featured : TINYINT
+  view_count : BIGINT
+  flower_count : INT
+  favorite_count : INT
+  latest_chapter_title : VARCHAR(255)
+  latest_chapter_id : BIGINT
+  created_at : DATETIME
+  updated_at : DATETIME
+}
+
+entity "tag\n标签" as tag {
+  * id : BIGINT <<PK>>
+  --
+  name : VARCHAR(50)
+  created_at : DATETIME
+}
+
+entity "novel_tag\n小说-标签关联" as nt {
+  * novel_id : BIGINT <<FK>>
+  * tag_id : BIGINT <<FK>>
+}
+
+entity "chapter\n章节" as ch {
+  * id : BIGINT <<PK>>
+  --
+  novel_id : BIGINT <<FK>>
+  volume : VARCHAR(50)
+  title : VARCHAR(255)
+  sort_order : INT
+  content : LONGTEXT
+  word_count : INT
+  created_at : DATETIME
+  updated_at : DATETIME
+}
+
+pub ||--o{ nov : "一个文库对应多本小说"
+auth ||--o{ nov : "一个作者对应多本小说"
+nov ||--o{ ch : "一本小说对应多章"
+nov ||--o{ nt : ""
+tag ||--o{ nt : "一个标签对应多本小说"
+
+@enduml

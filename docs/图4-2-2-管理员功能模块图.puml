@@ -1,0 +1,47 @@
+@startuml 图4-2-2-管理员功能模块图
+!theme plain
+top to bottom direction
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName "Microsoft YaHei UI"
+skinparam packageStyle rectangle
+skinparam ArrowColor #666666
+
+title 图4-2-2 管理员功能模块图
+
+rectangle "后台管理员功能" as ROOT #EAF3FF
+
+rectangle "用户管理" as M1 #FFFFFF
+rectangle "小说管理" as M2 #FFFFFF
+rectangle "分类管理" as M3 #FFFFFF
+rectangle "评论管理" as M4 #FFFFFF
+rectangle "数据统计" as M5 #FFFFFF
+rectangle "系统设置" as M6 #FFFFFF
+
+ROOT -down-> M1
+ROOT -down-> M2
+ROOT -down-> M3
+ROOT -down-> M4
+ROOT -down-> M5
+ROOT -down-> M6
+
+rectangle "用户查询/状态维护/禁用处理" as M1A
+rectangle "小说新增编辑/上下架/章节维护" as M2A
+rectangle "文库管理/标签管理/关联维护" as M3A
+rectangle "评论审核/违规删除/状态更新" as M4A
+rectangle "阅读收藏鲜花统计/趋势分析" as M5A
+rectangle "参数配置/推荐位配置/日志查看" as M6A
+
+M1 -down-> M1A
+M2 -down-> M2A
+M3 -down-> M3A
+M4 -down-> M4A
+M5 -down-> M5A
+M6 -down-> M6A
+
+note bottom of ROOT
+统一通过 /api/admin/** 访问，基于 JWT 角色鉴权
+end note
+
+@enduml

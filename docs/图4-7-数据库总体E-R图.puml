@@ -1,0 +1,113 @@
+@startuml 图4-7-数据库总体E-R图
+!theme plain
+skinparam backgroundColor #FEFEFE
+skinparam linetype ortho
+
+title 图4-7 数据库总体 E-R 图（概要）
+
+entity "publisher\n文库" as pub {
+  * id : BIGINT <<PK>>
+  --
+  name : VARCHAR(100)
+  sort_order : INT
+}
+
+entity "author\n作者" as auth {
+  * id : BIGINT <<PK>>
+  --
+  name : VARCHAR(100)
+}
+
+entity "novel\n小说" as nov {
+  * id : BIGINT <<PK>>
+  --
+  title : VARCHAR(255)
+  author_id : FK
+  publisher_id : FK
+  cover_url : VARCHAR(500)
+  synopsis : TEXT
+  word_count : INT
+  rating : DECIMAL
+  is_completed : TINYINT
+  view_count : BIGINT
+  flower_count : INT
+  favorite_count : INT
+  latest_chapter_id : BIGINT
+}
+
+entity "tag\n标签" as tag {
+  * id : BIGINT <<PK>>
+  --
+  name : VARCHAR(50)
+}
+
+entity "novel_tag\n小说-标签" as nt {
+  * novel_id : FK
+  * tag_id : FK
+}
+
+entity "chapter\n章节" as ch {
+  * id : BIGINT <<PK>>
+  --
+  novel_id : FK
+  volume : VARCHAR(50)
+  title : VARCHAR(255)
+  sort_order : INT
+  content : LONGTEXT
+  word_count : INT
+}
+
+entity "user\n用户" as usr {
+  * id : BIGINT <<PK>>
+  --
+  username : VARCHAR(50)
+  email : VARCHAR(100)
+  password : VARCHAR(255)
+  nickname : VARCHAR(50)
+}
+
+entity "reading_progress\n阅读进度" as rp {
+  * id : BIGINT <<PK>>
+  --
+  user_id : FK
+  novel_id : FK
+  volume : VARCHAR(50)
+  sort_order : INT
+  progress_position : INT
+  last_read_at : DATETIME
+}
+
+entity "user_bookshelf\n用户书架" as ub {
+  * id : BIGINT <<PK>>
+  --
+  user_id : FK
+  novel_id : FK
+  created_at : DATETIME
+}
+
+entity "user_read_preferences\n阅读偏好" as urp {
+  * id : BIGINT <<PK>>
+  --
+  user_id : FK
+  font_size : INT
+  line_height : DECIMAL
+  theme : VARCHAR(20)
+  page_width : INT
+}
+
+pub  ||--o{ nov : "1:N 文库→小说"
+auth ||--o{ nov : "1:N 作者→小说"
+nov  ||--o{ ch  : "1:N 小说→章节"
+
+nov  ||--o{ nt  : "1:N 小说→novel_tag"
+tag  ||--o{ nt  : "1:N 标签→novel_tag"
+
+usr  ||--o{ rp  : "1:N 用户→阅读进度"
+nov  ||--o{ rp  : "1:N 小说→阅读进度"
+
+usr  ||--o{ ub  : "1:N 用户→书架"
+nov  ||--o{ ub  : "1:N 小说→书架"
+
+usr  ||--|| urp : "1:1 用户→阅读偏好"
+
+@enduml

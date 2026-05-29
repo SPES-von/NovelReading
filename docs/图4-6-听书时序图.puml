@@ -1,0 +1,35 @@
+@startuml 图4-6-听书时序图
+!theme plain
+skinparam backgroundColor #FEFEFE
+
+title 图4-6 听书功能关键业务流程时序图
+
+actor 用户 as User
+participant "Vue 阅读页" as FE
+participant "语音/听书 Controller" as VC
+participant "语音 Service" as VS
+participant "百度语音合成 API" as TTS
+
+User -> FE: 点击“听书”
+FE -> FE: 获取当前章节正文 content
+
+FE -> VC: POST 请求（章节正文或 chapterId）
+VC -> VS: 请求语音合成
+
+VS -> VS: 若文本过长则分片
+
+loop 每片文本
+  VS -> TTS: 调用语音合成接口
+  TTS --> VS: 返回音频流
+end
+
+VS --> VC: 合并音频流/URL
+VC --> FE: 返回音频数据或流 URL
+
+FE -> FE: 创建 Audio 播放
+FE --> User: 播放语音
+
+User -> FE: 暂停/继续/停止
+FE --> User: 控制播放
+
+@enduml

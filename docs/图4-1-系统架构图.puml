@@ -1,0 +1,63 @@
+@startuml 图4-1-系统架构图
+!theme plain
+top to bottom direction
+skinparam backgroundColor #FEFEFE
+skinparam shadowing false
+skinparam roundcorner 6
+skinparam packageStyle rectangle
+skinparam ArrowColor #333333
+skinparam packageBorderColor #666666
+
+title 图4-1 轻小说阅读系统总体架构设计图
+
+package "浏览器（B/S 客户端）" as Browser #E8F4FC {
+  rectangle "读者端\nVue 3 SPA\n（访客 / 注册用户）" as Reader #FFFFFF
+  rectangle "管理端\nVue 3 Admin\n（/admin 或独立部署）" as Admin #FFFFFF
+}
+
+package "通信层（前后端分离）" as Comm #FFF8E8 {
+  rectangle "HTTP / HTTPS\nRESTful API · JSON\nJWT：Authorization Bearer" as Proto #FFFFFF
+}
+
+package "Spring Boot 服务端" as Boot #F0F8F0 {
+  package "控制层（Controller）" as PL #FFFFFF {
+    rectangle "读者端 API\n前缀 /api/**" as RC
+    rectangle "管理端 API\n前缀 /api/admin/**\n结合 JWT 角色校验" as AC
+  }
+  package "业务逻辑层（Service）" as BL #FFFFFF {
+    rectangle "认证、用户、书架、阅读进度" as S1
+    rectangle "小说、章节、评论、统计" as S2
+  }
+  package "数据访问层" as DL #FFFFFF {
+    rectangle "JPA Repository\n实体 Entity 映射" as Repo
+  }
+}
+
+database "MySQL\n业务数据持久化" as DB #FFE8E8
+database "Redis\n热点与进度等缓存" as Redis #FFE8E8
+
+cloud "外部服务" as Ext #F5F5F5 {
+  rectangle "百度语音合成 API\n（听书）" as TTS
+}
+
+Reader --> Proto : 请求 / 响应
+Admin --> Proto
+Proto --> RC
+Proto --> AC
+
+RC --> S1
+RC --> S2
+AC --> S1
+AC --> S2
+S1 --> Repo
+S2 --> Repo
+Repo --> DB : JDBC
+S2 --> Redis
+S2 ..> TTS : 文本转语音
+
+note right of Boot
+  无状态认证：校验 JWT 签名与过期时间，
+  解析用户身份与角色，无需服务端集中会话存储
+end note
+
+@enduml
